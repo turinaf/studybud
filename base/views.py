@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Room
 # from django.http import HttpResponse
 # We get rid of HttResponse after adding our template in Settings and use render
-
+from .forms import RoomForm
 # Create your views here.
 # rooms = [
 #     {'id': 1, 'name': "Let learn Python"},
@@ -20,3 +20,15 @@ def room(request, pk):
     # get used to get one single item from Room
     context = {'room': room}
     return render(request, 'base/room.html', context)
+
+def createRoom(request):
+    form = RoomForm()
+    if request.method == 'POST':
+        # print(request.POST)
+        form = RoomForm(request.POST)
+        # is the form is valid, form data into db and redirect the user to home page.
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    context = {'form': form}
+    return render(request, 'base/room_form.html', context)
