@@ -120,7 +120,9 @@ def createRoom(request):
         form = RoomForm(request.POST)
         # is the form is valid, form data into db and redirect the user to home page.
         if form.is_valid():
-            form.save()
+            room = form.save(commit=False)
+            room.host = request.user
+            room.save()
             return redirect('home')
     context = {'form': form}
     return render(request, 'base/room_form.html', context)
