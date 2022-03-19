@@ -96,6 +96,21 @@ def room(request, pk):
     context = {'room': room, 'room_messages': room_messages, 'participants': participants}
     return render(request, 'base/room.html', context)
 
+def userProfile(request, pk):
+    user = User.objects.get(id=pk)
+    
+    # we can get all children of specific object by doing ModelName_set.all()
+    # That's how we are getting all rooms hosted by this specific user. 
+    rooms = user.room_set.all()
+    room_messages = user.message_set.all()
+    topics = Topic.objects.all()
+    context = {'user':user,
+               'rooms':rooms,
+               'room_messages': room_messages,
+               'topics': topics,
+               }
+    return render(request, 'base/profile.html', context)
+
 # Restricting unauthorized user from accessing some pages.
 @login_required(login_url='login')
 def createRoom(request):
